@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require("express"); //express framework
 const path = require("path");
 
 const { open } = require("sqlite");
@@ -12,6 +12,7 @@ const dbPath = path.join(__dirname, "UserDataBase.db");
 
 let db = null;
 
+// DataBase Connection With SQlite DB
 const initializeDBAndServer = async () => {
   try {
     db = await open({
@@ -26,8 +27,10 @@ const initializeDBAndServer = async () => {
     process.exit(1);
   }
 };
-initializeDBAndServer();
 
+initializeDBAndServer(); //Initializing DB
+
+// INSERT A NEW USER IN DB
 app.post("/api/v1/say-hello", async (request, response) => {
   const { firstName, lastName } = request.body;
 
@@ -54,15 +57,20 @@ app.post("/api/v1/say-hello", async (request, response) => {
   }
 });
 
+// GET ALL THE USERS LIST
 app.get("/api/v1/names", async (req, res) => {
   const AllUsers = "SELECT * FROM users;";
   const dbResponse = await db.all(AllUsers);
   res.send(dbResponse);
 });
 
+// HOME PAGE
+
 app.get("/", (req, res) => {
-  res.send("HElloworsl");
+  res.send("Welcome to Chatelon");
 });
+
+// UPDATE THE DATABASE BY ID
 
 app.put("/api/v1/:id/", async (request, response) => {
   const { id } = request.params;
@@ -78,6 +86,8 @@ app.put("/api/v1/:id/", async (request, response) => {
   await db.run(updatePlayerQuery);
   response.send("User Details Updated");
 });
+
+// DELETE THE DATABASE BY ID
 
 app.delete("/api/v1/:id/", async (request, response) => {
   const { id } = request.params;
